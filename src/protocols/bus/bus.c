@@ -92,6 +92,8 @@ static int nn_bus_send (struct nn_sockbase *self, struct nn_msg *msg)
 
     /*  Send the message. */
     rc = nn_xbus_send (&bus->xbus.sockbase, msg);
+    if (nn_slow (rc == -EAGAIN))
+        return -EAGAIN;
     errnum_assert (rc == 0, -rc);
 
     return 0;

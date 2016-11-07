@@ -77,8 +77,9 @@ int nn_dist_send (struct nn_dist *self, struct nn_msg *msg,
     /*  In the specific case when there are no outbound pipes. There's nowhere
         to send the message to. Deallocate it. */
     if (nn_slow (self->count) == 0) {
-        nn_msg_term (msg);
-        return 0;
+        return -EAGAIN;
+        //nn_msg_term (msg);
+        //return 0;
     }
 
     /*  Send the message to all the subscribers. */
