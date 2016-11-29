@@ -640,7 +640,7 @@ int nn_sock_send (struct nn_sock *self, struct nn_msg *msg, int flags)
         /*
          *  Double check if pipes are still available for sending
          */
-        if (!nn_efd_wait (&self->sndfd, 0)) {
+        if (!nn_efd_wait (&self->sndfd, timeout)) {
             self->flags |= NN_SOCK_FLAG_OUT;
         }
 
@@ -648,7 +648,14 @@ int nn_sock_send (struct nn_sock *self, struct nn_msg *msg, int flags)
             already elapsed. */
         if (self->sndtimeo >= 0) {
             now = nn_clock_ms();
-            timeout = (int) (now > deadline ? 0 : deadline - now);
+			if (now > deadline) {
+				nn_ctx_leave(&self->ctx);
+				return -ETIMEDOUT;
+			}
+			else {
+				timeout = (int) deadline - now;
+			}
+            //timeout = (int) (now > deadline ? 0 : deadline - now);
         }
     }
 }
