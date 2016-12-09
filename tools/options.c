@@ -243,6 +243,7 @@ static void nn_option_error (char *message, struct nn_parse_context *ctx,
 
 
 static void nn_memory_error (struct nn_parse_context *ctx) {
+    fprintf (stderr, "nn_memory_error\n");
     fprintf (stderr, "%s: Memory error while parsing command-line",
         ctx->argv[0]);
     abort ();
@@ -522,6 +523,7 @@ static void nn_process_option (struct nn_parse_context *ctx,
             blob->need_free = 1;
             return;
     }
+    fprintf (stderr, "nn_process_option\n");
     abort ();
 }
 
